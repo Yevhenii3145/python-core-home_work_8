@@ -1,16 +1,19 @@
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-users  = [{"name": "Roblen","birthday": datetime(2000,1,3)},
-          {"name": "Lunio","birthday": datetime(1942,5,22)},
-          {"name": "Persostrat","birthday": datetime(1988,5,22)},
-          {"name": "Pores","birthday": datetime(1987,5,22)},
-          {"name": "Yavliga","birthday": datetime(2002,5,22)},
-          {"name": "Nikoglay","birthday": datetime(1976,5,22)},
-          {"name": "Bucefal","birthday": datetime(2004,5,22)},
-          {"name": "Lubomir","birthday": datetime(2004,7,23)},
-          {"name": "Sigizmund","birthday": datetime(2004,7,22)},
-          {"name": "Melaniya","birthday": datetime(2004,7,29)},]
+users = [{"name": "Roblen", "birthday": datetime(2000, 1, 3)},
+         {"name": "Lunio", "birthday": datetime(1942, 7, 23)},
+         {"name": "Persostrat", "birthday": datetime(1988, 5, 22)},
+         {"name": "Pores", "birthday": datetime(1987, 5, 22)},
+         {"name": "Yavliga", "birthday": datetime(2002, 7, 30)},
+         {"name": "Nikoglay", "birthday": datetime(1976, 7, 27)},
+         {"name": "Bucefal", "birthday": datetime(2004, 5, 22)},
+         {"name": "Lubomir", "birthday": datetime(1950, 7, 23)},
+         {"name": "Sigizmund", "birthday": datetime(1078, 7, 22)},
+         {"name": "Melaniya", "birthday": datetime(1996, 7, 27)},
+         {"name": "Aslan", "birthday": datetime(2001, 8, 1)},
+         {"name": "Oxana", "birthday": datetime(1995, 7, 28)}]
+
 
 week = {
     0: "Monday",
@@ -23,63 +26,81 @@ week = {
     "next": "Next Monday"
 }
 
-congr_by_day = defaultdict(list)
+celebrate_dict = defaultdict(list)
+
 
 def get_birthdays_per_week(users):
     delta_forward = timedelta(days=7)
     delta_back = timedelta(days=2)
+
     current_date = datetime.now().date()
-    # print("111fff", current_date.weekday())
-    # print("YER",current_date.year)
     finish_diapazon = current_date + delta_forward
     start_diapazon = current_date - delta_back
-    # print(f"finish {finish_diapazon} start {start_diapazon}")
-    # print("D",current_date)
-    to_congratulate = []
+
+    celebrate_list = []
+
     for user in users:
-        u_birthday = user["birthday"].date()
-        u_birthday_replaced = u_birthday.replace(year=current_date.year)
-        # print("wwwwww",u_birthday_replaced)
-        # print("date",u_birthday_replaced.weekday())
-        if start_diapazon <= u_birthday_replaced <= finish_diapazon:
-            # print("Op piimav")
-            # print(user)
-            get_week_day = u_birthday_replaced.weekday()
-            if start_diapazon <= u_birthday_replaced < current_date and get_week_day in (5,6):
-                to_congratulate.append(user)
-                print(f"День рожденя было в {week[get_week_day]} нужно поздравить в понедельник")
-            elif current_date == u_birthday_replaced and get_week_day in (5,6):
-                to_congratulate.append(user)
-                print(f"Готовьтесь поздравлять в понедельник {user}")
-            elif current_date == u_birthday_replaced:
-                to_congratulate.append(user)
-                print(f"Бегите уже поздравлять {user}")
-            elif current_date < u_birthday_replaced <= finish_diapazon and get_week_day in (5,6):
+        birth_day = user["birthday"].date()
+        birth_day = birth_day.replace(year=current_date.year)
+
+        if start_diapazon <= birth_day <= finish_diapazon:
+            birth_day_weekday = birth_day.weekday()
+
+            if start_diapazon <= birth_day < current_date and birth_day_weekday in (5, 6) and current_date.weekday() == 0:
+                user.update({"today": True})
+                celebrate_list.append(user)
+                print(
+                    f"День рожденя {user['name']} было в {week[ birth_day_weekday]} нужно поздравить сегодня")
+
+            elif current_date == birth_day and birth_day_weekday in (5, 6):
+                celebrate_list.append(user)
+                print(f"Готовьтесь поздравлять в понедельник {user['name']}")
+
+            elif current_date == birth_day:
+                celebrate_list.append(user)
+                print(f"Бегите уже поздравлять {user['name']}")
+
+            elif current_date < birth_day <= finish_diapazon and birth_day_weekday in range(5, 6+1):
                 user.update({"next": True})
-                to_congratulate.append(user)
-                print(f"День рожденя только будет в {week[get_week_day]} нужно поздравить в следующий понедельник")
-            elif current_date < u_birthday_replaced <= finish_diapazon and get_week_day in (0,4):
-                to_congratulate.append(user)
-                print(f"День рожденя только будет в {week[get_week_day]} нужно поздравить")
+                celebrate_list.append(user)
+                print(
+                    f"День рожденя {user['name']} только будет в {week[ birth_day_weekday]} нужно поздравить в следующий понедельник")
 
-    # print(to_congratulate)
+            elif current_date < birth_day <= finish_diapazon and (birth_day_weekday in range(0, 4+1)):
+                celebrate_list.append(user)
+                print(
+                    f"День рожденя {user['name']} только будет в {week[ birth_day_weekday]} нужно поздравить")
 
-    for birthday_boy in to_congratulate:
-        if birthday_boy.get("next"):
-            birth_day = week["next"]
-            congr_by_day[birth_day].append(birthday_boy["name"])
+    for celebrator in celebrate_list:
+
+        if celebrator.get("next"):
+            week_day = week["next"]
+            celebrate_dict[week_day].append(celebrator["name"])
             continue
 
-        birth_day = birthday_boy["birthday"].date()
-        birth_day_replaced = birth_day.replace(year=current_date.year)
-        weekday_of_birth = birth_day_replaced.weekday()
-        # print("было",birth_day)
-        # print("стало",weekday_of_birth)
-        birth_day = week[weekday_of_birth]
-        congr_by_day[birth_day].append(birthday_boy["name"])
+        elif celebrator.get("today"):
+            week_day = week[0]
+            celebrate_dict[week_day].append(celebrator["name"])
+            continue
 
-    print(congr_by_day)
-    return(congr_by_day)
+        birth_day = celebrator["birthday"].date()
+        birth_day = birth_day.replace(year=current_date.year)
+        birth_day_weekday = birth_day.weekday()
+        week_day = week[birth_day_weekday]
+
+        celebrate_dict[week_day].append(celebrator["name"])
+
+    result = {"Monday": celebrate_dict.get("Monday", ""),
+              "Tuesday": celebrate_dict.get("Tuesday", ""),
+              "Wednesday": celebrate_dict.get("Wednesday", ""),
+              "Thursday": celebrate_dict.get("Thursday", ""),
+              "Friday": celebrate_dict.get("Friday", ""),
+              "Saturday": celebrate_dict.get("Saturday", ""),
+              "Sunday": celebrate_dict.get("Sunday", ""),
+              "Next Monday": celebrate_dict.get("Next Monday", ""), }
+
+    print(result)
+    return (result)
 
 
 get_birthdays_per_week(users)
