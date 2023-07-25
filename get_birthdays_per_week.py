@@ -91,14 +91,14 @@ def get_birthdays_per_week(users):
 
         celebrate_dict[week_day].append(celebrator["name"])
 
-    result = {"Monday": celebrate_dict.get("Monday", ""),
-              "Tuesday": celebrate_dict.get("Tuesday", ""),
-              "Wednesday": celebrate_dict.get("Wednesday", ""),
-              "Thursday": celebrate_dict.get("Thursday", ""),
-              "Friday": celebrate_dict.get("Friday", ""),
-              "Saturday": celebrate_dict.get("Saturday", ""),
-              "Sunday": celebrate_dict.get("Sunday", ""),
-              "Next Monday": celebrate_dict.get("Next Monday", ""), }
+    result = {"Monday": celebrate_dict.get("Monday", []),
+              "Tuesday": celebrate_dict.get("Tuesday", []),
+              "Wednesday": celebrate_dict.get("Wednesday", []),
+              "Thursday": celebrate_dict.get("Thursday", []),
+              "Friday": celebrate_dict.get("Friday", []),
+              "Saturday": celebrate_dict.get("Saturday", []),
+              "Sunday": celebrate_dict.get("Sunday", []),
+              "Next Monday": celebrate_dict.get("Next Monday", []), }
 
     print(result)
     return (result)
