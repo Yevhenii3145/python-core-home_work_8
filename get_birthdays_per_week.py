@@ -70,7 +70,7 @@ def get_birthdays_per_week(users):
             elif current_date < birth_day <= finish_diapazon and (birth_day_weekday in range(0, 4+1)):
                 celebrate_list.append(user)
                 print(
-                    f"День рожденя {user['name']} только будет в {week[ birth_day_weekday]} нужно поздравить")
+                    f"День рожденя {user['name']} будет в {week[ birth_day_weekday]} нужно поздравить")
 
     for celebrator in celebrate_list:
 
