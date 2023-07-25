@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from collections import defaultdict
 
+
 users = [{"name": "Roblen", "birthday": datetime(2000, 1, 3)},
          {"name": "Lunio", "birthday": datetime(1942, 7, 23)},
          {"name": "Persostrat", "birthday": datetime(1988, 5, 22)},
